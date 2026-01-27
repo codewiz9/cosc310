@@ -10,6 +10,8 @@ public class ArrayAppend extends Target {
 
     @Override
     public int method(int[] indicesOrnums) {
+        //times how long it takes to append all numbers in indicesOrnums to arr
+        //all timing is done in Target class
         int result = 0;
         int largerarr[] = java.util.Arrays.copyOf(arr, arr.length+indicesOrnums.length);
         for (int i = 0; i < indicesOrnums.length; i++) {

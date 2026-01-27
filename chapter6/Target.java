@@ -17,19 +17,24 @@ abstract public class Target {
         this.name = name;
     }
 
+    public String getName() {
+        return name;
+    }
+
     // method under test
     // indicesOrnums is being used for two different purposes
     abstract public int method(int indicesOrnums[]);
 
     // calls the method under test TRIALS number of times
-    // 
+    // runTests returns the average time taken in nanoseconds for the diffrent
+    // methods
     public double runTests(int indicesOrnums[]) {
         long total = 0;
         for (int i = 0; i < TRIALS; i++) {
             long start = System.nanoTime();
             int result = method(indicesOrnums);
             long end = System.nanoTime();
-            long elapsed = end-start;
+            long elapsed = end - start;
             results[i] = elapsed;
         }
         double avg = total / (double) TRIALS;
@@ -39,8 +44,8 @@ abstract public class Target {
     // outputs the individual results to the output stream
     public void writeResults(PrintWriter out) {
         for (int i = 0; i < TRIALS; i++) {
-            out.printf("%s,%d,%.2f\n", name, i+1, results[i]/1000.0);
+            out.printf("%s,%d,%.2f\n", name, i + 1, results[i] / 1000.0);
         }
     }
-    
+
 }
