@@ -1,67 +1,57 @@
 package chapter6;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 public class ArrayVsArrayListLab {
 
-    protected static int arrayRanndomAccess(int indcies[], int arr[]){
-        int finnal = 0;
-        for(int i = 0; i < indcies.length; i++){
-            finnal += arr[indcies[i]];
+    
+
+    protected static int listRandomAccess(int indices[], ArrayList<Integer> list) {
+        int result = 0;
+        for (int i = 0; i < indices.length; i++) {
+            result += list.get(indices[i]);
         }
-
-        return finnal;
-
+        return result;
     }
-     protected static int listRanndomAccess(int indcies[], ArrayList<Integer> list){
-        int finnal = 0;
-        for(int i = 0; i < indcies.length; i++){
-            finnal += list.get(indcies[i]);
-        }
 
-        return finnal;
-
-    }
     public static void main(String[] args) throws IOException {
-        // long start = System.nanoTime();
-        // System.out.println("Hello World");
-        // long finsih = System.nanoTime();
-        // long elapsed = finsih - start;
-        // System.out.println("println took: " + elapsed);
-
-        // start = System.nanoTime();
-        // arrayTest(30_000);
-        // finsih = System.nanoTime();
-        // elapsed = finsih - start;
-        // System.out.println("array test took: " + elapsed);
-        int arr[]= DataLoader.loadArray("numbers.txt");
+       /* long start = System.nanoTime();
+        System.out.println("hello, world");
+        long finish = System.nanoTime();
+        long elapsed = finish - start;
+        System.out.println("println: " + elapsed + "ns");
+        start = System.nanoTime();
+        arrayTest(30_000);
+        finish = System.nanoTime();
+        elapsed = finish - start;
+        System.out.println("arrayTest: " + elapsed + "ns"); */
+        int arr[] = DataLoader.loadArray("numbers.txt");
         ArrayList<Integer> list = DataLoader.loadArrayList("numbers.txt");
         Random r = new Random();
-        int indcies[] = new int[100];
-        for(int i = 0; i < indcies.length; i++){
-            indcies[i] = r.nextInt(arr.length);
-
+        int indices[] = new int[100_000];
+        for (int i = 0; i < indices.length; i++) {
+            indices[i] = r.nextInt(arr.length);
         }
 
-        //time test array
-        long start = System.nanoTime();
-        int result = arrayRanndomAccess(indcies, arr);
-        long finnish = System.nanoTime();
-        long elapsed = finnish - start;
-        System.out.println(result);
-        System.out.println("array took: " + elapsed);
+        PrintWriter fileOut = new PrintWriter(new File("results.csv"));
+        Target tests[] = new Target[8];
 
-        //time test list
-        start = System.nanoTime();
-        result = listRanndomAccess(indcies, list);
-        finnish = System.nanoTime();
-        elapsed = finnish - start;
-        System.out.println(result);
-        System.out.println("list took: " + elapsed);
+        tests[0] = new ArrayRandom(arr, list, "array,random_access");
+        tests[1] = new ListRandom(arr, list, "arraylist, random_access");
+        tests[2] = new ArrayAppend(arr, list, "array,append");
+        
+        for (Target target : tests) {
+            if (target != null) {
+                target.runTests(indices);
+                target.writeResults(fileOut);
+            }
+        }
+        
+
+        fileOut.close();
+        
     }
-
-
-    
 }
