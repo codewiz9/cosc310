@@ -59,6 +59,14 @@ public class ArrayVsArrayListLab {
                 target.writeResults(fileOut);
             }
         }
+        //print the average times for each test and wich one won
+        for (int i = 0; i < tests.length; i+=2) {
+            if (test_avg[i] < test_avg[i+1]) {
+                System.out.println(tests[i].getName() + " won");
+            } else {
+                System.out.println(tests[i+1].getName() + " won" );
+            }
+        }
         fileOut.close();
 
     }
