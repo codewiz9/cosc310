@@ -12,7 +12,8 @@ public class ArrayListQueue<T> implements Queue<T> {
 
     public ArrayListQueue() {
         buffer = new ArrayList<>(16);
-        for (int i = 0; i < 16; i++) buffer.add(null);
+        for (int i = 0; i < 16; i++)
+            buffer.add(null);
         head = 0;
         tail = 0;
         size = 0;
@@ -28,17 +29,22 @@ public class ArrayListQueue<T> implements Queue<T> {
 
     @Override
     public T dequeue() throws Exception {
-        // TODO - check for empty queue
+        if (isEmpty()) {
+            throw new Exception("Queue is empty");
+        }
         T item = buffer.get(head);
-        size--;
+        buffer.set(head, null); // Help GC
         head = (head + 1) % buffer.size();
+        size--;
         return item;
     }
 
     @Override
     public T front() throws Exception {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            throw new Exception("Queue is empty");
+        }
+        return buffer.get(head);
     }
 
     @Override
@@ -52,18 +58,23 @@ public class ArrayListQueue<T> implements Queue<T> {
     }
 
     private void ensureCapacity() {
-        // TODO: if needed > buffer.size(), double capacity and re-center head at 0
         if (size < buffer.size())
             return;
 
         // resize and recenter
         int oldcap = buffer.size();
-        ArrayList<T> bigbuffer = new ArrayList<>(buffer.size()*2);
-        for (int i=0; i<oldcap; i++) {
+        ArrayList<T> bigbuffer = new ArrayList<>(oldcap * 2);
+        // Pre-fill with nulls to allow set()
+        for (int i = 0; i < oldcap * 2; i++) {
+            bigbuffer.add(null);
+        }
+
+        for (int i = 0; i < oldcap; i++) {
             bigbuffer.set(i, buffer.get(head));
             head = (head + 1) % oldcap;
         }
-        buffer = bigbuffer; // the "old" swaperoo trick
+        buffer = bigbuffer;
+        head = 0;
         tail = oldcap;
     }
 }

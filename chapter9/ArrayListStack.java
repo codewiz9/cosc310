@@ -27,8 +27,10 @@ public class ArrayListStack<T> implements Stack<T> {
 
     @Override
     public T top() throws Exception {
-        // TODO
-        return null;
+        if (isEmpty()) {
+            throw new EmptyStackException();
+        }
+        return data.get(data.size() - 1);
     }
 
     @Override

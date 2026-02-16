@@ -8,6 +8,7 @@ public class SortedDLinkedListPriorityQueue<T> implements PriorityQueue<T> {
     private static class Entry<T> implements Comparable<Entry<T>> {
         final int priority;
         final T data;
+
         Entry(int priority, T data) {
             this.priority = priority;
             this.data = data;
@@ -28,35 +29,41 @@ public class SortedDLinkedListPriorityQueue<T> implements PriorityQueue<T> {
     @Override
     public void enqueue(int priority, T data) {
         Entry<T> newentry = new Entry<>(priority, data);
-        if (isEmpty()) {
+        if (list.isEmpty()) {
             list.add(newentry);
             return;
         }
-        
+
         // Algorithm: make sure first item in DLInkedList is always highest priority
-        // Start with first item and traverse the list until you get to a higher priority item
+        // Start with first item and traverse the list until you get to a higher
+        // priority item
         // Insert the new item before the one you just found
         DNode<Entry<T>> curr = list.get(0);
-        while (curr!=null) {
-            if (priority<curr.getData().priority) {
+        while (curr != null) {
+            if (priority < curr.getData().priority) {
                 list.addBefore(curr, newentry);
-                break;
+                return;
             }
             curr = curr.getNext();
         }
+        list.add(newentry);
 
     }
 
     @Override
     public T dequeue() throws Exception {
-        // TODO: removeFirst()
-        return null;
+        if (isEmpty()) {
+            throw new Exception("PriorityQueue is empty");
+        }
+        return list.removeFirst().getData().data;
     }
 
     @Override
     public T front() throws Exception {
-        // TODO: peek head
-        return null;
+        if (isEmpty()) {
+            throw new Exception("PriorityQueue is empty");
+        }
+        return list.get(0).getData().data;
     }
 
     @Override
