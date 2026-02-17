@@ -1,0 +1,35 @@
+Java ADT Benchmark (nanoTime).
+Warmup ops: 50000, Measure ops: 100000, Trials: 5
+
+Sanity checks: OK
+
+== Stack: ArrayListStack ==
+  Workload1 bulk push+pop                 median:      16.67 ns/op   checksum: 1249975000
+  Workload2 mixed steady-state            median:      46.07 ns/op   checksum: 167499563513
+
+== Stack: DLinkedListStack ==
+  Workload1 bulk push+pop                 median:      38.07 ns/op   checksum: 1249975000
+  Workload2 mixed steady-state            median:      50.50 ns/op   checksum: 167499563513
+
+== Queue: ArrayListQueue ==
+  Workload1 bulk enq+deq                  median:      30.26 ns/op   checksum: 1249975000
+  Workload2 mixed steady-state            median:      46.26 ns/op   checksum: -75888812787
+
+== Queue: DLinkedListQueue ==
+  Workload1 bulk enq+deq                  median:      19.89 ns/op   checksum: 1249975000
+  Workload2 mixed steady-state            median:      51.52 ns/op   checksum: -75888812787
+
+== PriorityQueue: SortedArrayListPQ ==
+  Workload1 bulk enq+deq (uniform priorities)  median:   13191.48 ns/op   checksum: 1249975000
+  Workload2 mixed steady-state (uniform priorities)  median:   24747.91 ns/op   checksum: -112035861255
+  Workload3 skewed priorities (bulk)      median:   12109.32 ns/op   checksum: 1249975000
+
+== PriorityQueue: SortedDLinkedListPQ ==
+  Workload1 bulk enq+deq (uniform priorities)  median:  145393.22 ns/op   checksum: 1249975000
+  Workload2 mixed steady-state (uniform priorities)  median:   91223.14 ns/op   checksum: -112035861255
+  Workload3 skewed priorities (bulk)      median:  147465.40 ns/op   checksum: 1249975000
+
+== PriorityQueue: BinaryHeapPQ ==
+  Workload1 bulk enq+deq (uniform priorities)  median:     209.19 ns/op   checksum: 1249975000
+  Workload2 mixed steady-state (uniform priorities)  median:     133.07 ns/op   checksum: -114833766421
+  Workload3 skewed priorities (bulk)      median:     121.09 ns/op   checksum: 1249975000

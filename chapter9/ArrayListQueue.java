@@ -64,7 +64,7 @@ public class ArrayListQueue<T> implements Queue<T> {
         // resize and recenter
         int oldcap = buffer.size();
         ArrayList<T> bigbuffer = new ArrayList<>(oldcap * 2);
-        // Pre-fill with nulls to allow set()
+        // Prefill with nulls to allow set()
         for (int i = 0; i < oldcap * 2; i++) {
             bigbuffer.add(null);
         }

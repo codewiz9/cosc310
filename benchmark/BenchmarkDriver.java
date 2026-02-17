@@ -11,9 +11,9 @@ public class BenchmarkDriver {
     // -----------------------------
     // CONFIG
     // -----------------------------
-    private static final int WARMUP_OPS = 150_000;
-    private static final int MEASURE_OPS = 600_000;
-    private static final int TRIALS = 7;
+    private static final int WARMUP_OPS = 50_000;
+    private static final int MEASURE_OPS = 100_000;
+    private static final int TRIALS = 5;
     private static final long SEED = 315_351_107L;
 
     public static void main(String[] args) throws Exception {
