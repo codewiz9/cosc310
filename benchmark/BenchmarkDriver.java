@@ -9,8 +9,8 @@ public class BenchmarkDriver {
     // -----------------------------
     // CONFIG
     // -----------------------------
-    private static final int WARMUP_OPS = 150_000;
-    private static final int MEASURE_OPS = 300_000;
+    private static final int WARMUP_OPS = 100_000;
+    private static final int MEASURE_OPS = 200_000;
     private static final int TRIALS = 7;
     private static final long SEED = 315_351_107L;
 
