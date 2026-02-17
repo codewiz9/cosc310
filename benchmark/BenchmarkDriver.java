@@ -1,6 +1,8 @@
 package benchmark;
 
 import chapter9.*;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -9,8 +11,8 @@ public class BenchmarkDriver {
     // -----------------------------
     // CONFIG
     // -----------------------------
-    private static final int WARMUP_OPS = 100_000;
-    private static final int MEASURE_OPS = 200_000;
+    private static final int WARMUP_OPS = 150_000;
+    private static final int MEASURE_OPS = 600_000;
     private static final int TRIALS = 7;
     private static final long SEED = 315_351_107L;
 
@@ -36,64 +38,49 @@ public class BenchmarkDriver {
     // SANITY
     // -----------------------------
     private static void sanity() throws Exception {
-        Stack<Integer>[] stacks = new Stack[] {
-                new chapter9.ArrayListStack<>(),
-                new chapter9.DLinkedListStack<>()
-        };
+        ArrayList<Stack<Integer>> stacks = new ArrayList<>();
+        stacks.add(new chapter9.ArrayListStack<Integer>());
+        stacks.add(new chapter9.DLinkedListStack<Integer>());
 
         for (Stack<Integer> s : stacks) {
-            for (int i = 0; i < 10; i++)
-                s.push(i);
-            if (s.top() != 9)
-                throw new RuntimeException("Stack top failed");
+            for (int i = 0; i < 10; i++) s.push(i);
+            if (s.top() != 9) throw new RuntimeException("Stack top failed");
             for (int i = 9; i >= 0; i--) {
                 int v = s.pop();
-                if (v != i)
-                    throw new RuntimeException("Stack pop order failed");
+                if (v != i) throw new RuntimeException("Stack pop order failed");
             }
-            if (!s.isEmpty())
-                throw new RuntimeException("Stack empty failed");
+            if (!s.isEmpty()) throw new RuntimeException("Stack empty failed");
         }
 
-        Queue<Integer>[] queues = new Queue[] {
-                new chapter9.ArrayListQueue<>(),
-                new chapter9.DLinkedListQueue<>()
-        };
+        ArrayList<Queue<Integer>> queues = new ArrayList<>();
+        queues.add(new chapter9.ArrayListQueue<>());
+        queues.add(new chapter9.DLinkedListQueue<>());
 
         for (Queue<Integer> q : queues) {
-            for (int i = 0; i < 10; i++)
-                q.enqueue(i);
-            if (q.front() != 0)
-                throw new RuntimeException("Queue front failed");
+            for (int i = 0; i < 10; i++) q.enqueue(i);
+            if (q.front() != 0) throw new RuntimeException("Queue front failed");
             for (int i = 0; i < 10; i++) {
                 int v = q.dequeue();
-                if (v != i)
-                    throw new RuntimeException("Queue dequeue order failed");
+                if (v != i) throw new RuntimeException("Queue dequeue order failed");
             }
-            if (!q.isEmpty())
-                throw new RuntimeException("Queue empty failed");
+            if (!q.isEmpty()) throw new RuntimeException("Queue empty failed");
         }
 
         PriorityQueue<Integer>[] pqs = new PriorityQueue[] {
-                new chapter9.SortedArrayListPriorityQueue<>(),
-                new chapter9.SortedDLinkedListPriorityQueue<>(),
-                new chapter9.BinaryHeapPriorityQueue<>()
+            new chapter9.SortedArrayListPriorityQueue<>(),
+            new chapter9.SortedDLinkedListPriorityQueue<>(),
+            new chapter9.BinaryHeapPriorityQueue<>()
         };
 
         for (PriorityQueue<Integer> pq : pqs) {
             pq.enqueue(5, 50);
             pq.enqueue(1, 10);
             pq.enqueue(3, 30);
-            if (pq.front() != 10)
-                throw new RuntimeException("PQ front failed");
-            if (pq.dequeue() != 10)
-                throw new RuntimeException("PQ dequeue 1 failed");
-            if (pq.dequeue() != 30)
-                throw new RuntimeException("PQ dequeue 2 failed");
-            if (pq.dequeue() != 50)
-                throw new RuntimeException("PQ dequeue 3 failed");
-            if (!pq.isEmpty())
-                throw new RuntimeException("PQ empty failed");
+            if (pq.front() != 10) throw new RuntimeException("PQ front failed");
+            if (pq.dequeue() != 10) throw new RuntimeException("PQ dequeue 1 failed");
+            if (pq.dequeue() != 30) throw new RuntimeException("PQ dequeue 2 failed");
+            if (pq.dequeue() != 50) throw new RuntimeException("PQ dequeue 3 failed");
+            if (!pq.isEmpty()) throw new RuntimeException("PQ empty failed");
         }
 
         System.out.println("Sanity checks: OK");
@@ -144,8 +131,7 @@ public class BenchmarkDriver {
 
     private static void bench(String label, BenchRun run) throws Exception {
         // warmup
-        for (int i = 0; i < 2; i++)
-            run.run(true);
+        for (int i = 0; i < 2; i++) run.run(true);
 
         long[] times = new long[TRIALS];
         long[] sums = new long[TRIALS];
@@ -178,10 +164,8 @@ public class BenchmarkDriver {
 
         long sum = 0;
         long start = System.nanoTime();
-        for (int i = 0; i < n; i++)
-            s.push(i);
-        for (int i = 0; i < n; i++)
-            sum += s.pop();
+        for (int i = 0; i < n; i++) s.push(i);
+        for (int i = 0; i < n; i++) sum += s.pop();
         long end = System.nanoTime();
 
         return new Result(end - start, sum);
@@ -191,22 +175,15 @@ public class BenchmarkDriver {
         resetStack(s);
         Random rng = new Random(SEED);
 
-        for (int i = 0; i < 10_000; i++)
-            s.push(rng.nextInt());
+        for (int i = 0; i < 10_000; i++) s.push(rng.nextInt());
 
         long sum = 0;
         long start = System.nanoTime();
         for (int i = 0; i < ops; i++) {
             int r = rng.nextInt(100);
-            if (r < 60)
-                s.push(rng.nextInt());
-            else if (r < 95) {
-                if (!s.isEmpty())
-                    sum += s.pop();
-            } else {
-                if (!s.isEmpty())
-                    sum += s.top();
-            }
+            if (r < 60) s.push(rng.nextInt());
+            else if (r < 95) { if (!s.isEmpty()) sum += s.pop(); }
+            else { if (!s.isEmpty()) sum += s.top(); }
         }
         long end = System.nanoTime();
 
@@ -219,10 +196,8 @@ public class BenchmarkDriver {
 
         long sum = 0;
         long start = System.nanoTime();
-        for (int i = 0; i < n; i++)
-            q.enqueue(i);
-        for (int i = 0; i < n; i++)
-            sum += q.dequeue();
+        for (int i = 0; i < n; i++) q.enqueue(i);
+        for (int i = 0; i < n; i++) sum += q.dequeue();
         long end = System.nanoTime();
 
         return new Result(end - start, sum);
@@ -232,22 +207,15 @@ public class BenchmarkDriver {
         resetQueue(q);
         Random rng = new Random(SEED);
 
-        for (int i = 0; i < 10_000; i++)
-            q.enqueue(rng.nextInt());
+        for (int i = 0; i < 10_000; i++) q.enqueue(rng.nextInt());
 
         long sum = 0;
         long start = System.nanoTime();
         for (int i = 0; i < ops; i++) {
             int r = rng.nextInt(100);
-            if (r < 60)
-                q.enqueue(rng.nextInt());
-            else if (r < 95) {
-                if (!q.isEmpty())
-                    sum += q.dequeue();
-            } else {
-                if (!q.isEmpty())
-                    sum += q.front();
-            }
+            if (r < 60) q.enqueue(rng.nextInt());
+            else if (r < 95) { if (!q.isEmpty()) sum += q.dequeue(); }
+            else { if (!q.isEmpty()) sum += q.front(); }
         }
         long end = System.nanoTime();
 
@@ -266,8 +234,7 @@ public class BenchmarkDriver {
             int pr = skewed ? skewedPriority(rng) : rng.nextInt(10_000);
             pq.enqueue(pr, i);
         }
-        for (int i = 0; i < n; i++)
-            sum += pq.dequeue();
+        for (int i = 0; i < n; i++) sum += pq.dequeue();
         long end = System.nanoTime();
 
         return new Result(end - start, sum);
@@ -290,11 +257,9 @@ public class BenchmarkDriver {
                 int pr = skewed ? skewedPriority(rng) : rng.nextInt(10_000);
                 pq.enqueue(pr, rng.nextInt());
             } else if (r < 95) {
-                if (!pq.isEmpty())
-                    sum += pq.dequeue();
+                if (!pq.isEmpty()) sum += pq.dequeue();
             } else {
-                if (!pq.isEmpty())
-                    sum += pq.front();
+                if (!pq.isEmpty()) sum += pq.front();
             }
         }
         long end = System.nanoTime();
@@ -304,8 +269,7 @@ public class BenchmarkDriver {
 
     private static int skewedPriority(Random rng) {
         int r = rng.nextInt(100);
-        if (r < 90)
-            return rng.nextInt(11); // 0..10
+        if (r < 90) return rng.nextInt(11); // 0..10
         return 11 + rng.nextInt(100_000 - 11 + 1);
     }
 
@@ -313,18 +277,15 @@ public class BenchmarkDriver {
     // RESET HELPERS
     // -----------------------------
     private static void resetStack(Stack<Integer> s) throws Exception {
-        while (!s.isEmpty())
-            s.pop();
+        while (!s.isEmpty()) s.pop();
     }
 
     private static void resetQueue(Queue<Integer> q) throws Exception {
-        while (!q.isEmpty())
-            q.dequeue();
+        while (!q.isEmpty()) q.dequeue();
     }
 
     private static void resetPQ(PriorityQueue<Integer> pq) throws Exception {
-        while (!pq.isEmpty())
-            pq.dequeue();
+        while (!pq.isEmpty()) pq.dequeue();
     }
 
     // -----------------------------
@@ -337,7 +298,6 @@ public class BenchmarkDriver {
     private static class Result {
         final long nanos;
         final long checksum;
-
         Result(long nanos, long checksum) {
             this.nanos = nanos;
             this.checksum = checksum;

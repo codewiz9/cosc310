@@ -48,6 +48,11 @@ public class SortedDLinkedListPriorityQueue<T> implements PriorityQueue<T> {
         }
         list.add(newentry);
 
+        // if you get to the end of the list, add it at the end
+        if (curr==null) {
+            list.add(newentry); 
+        }
+
     }
 
     @Override
